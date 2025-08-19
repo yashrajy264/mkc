@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Paani & Play</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      font-family: "Segoe UI", sans-serif;
+      flex-direction: column;
+      text-align: center;
+      background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+      margin: 0;
+      overflow: hidden;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    p {
+      margin: 5px;
+      font-size: 1.1rem;
+    }
+    #message {
+      margin: 15px;
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #444;
+    }
+    #gameArea {
+      display: none;
+      position: relative;
+      width: 80vw;
+      height: 60vh;
+      border: 3px solid #333;
+      border-radius: 12px;
+      margin-top: 20px;
+      background: #fff;
+      overflow: hidden;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+    }
+    .box {
+      width: 60px;
+      height: 60px;
+      background: crimson;
+      position: absolute;
+      cursor: pointer;
+      border-radius: 50%;
+      transition: 0.2s;
+    }
+    .box:hover {
+      transform: scale(1.1);
+    }
+    #scoreBoard {
+      font-size: 1.2rem;
+      font-weight: bold;
+      margin-top: 15px;
+      color: #222;
+    }
+    #timer {
+      font-size: 1.1rem;
+      color: darkblue;
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>👋 Welcome! Try typing something...</h1>
+  <p>(Hint: type <b>paani</b> or <b>play</b>)</p>
+  <div id="message"></div>
+
+  <div id="gameArea"></div>
+  <p id="scoreBoard"></p>
+  <p id="timer"></p>
+
+  <script>
+    let typed = "";
+    const gameArea = document.getElementById("gameArea");
+    const scoreBoard = document.getElementById("scoreBoard");
+    const message = document.getElementById("message");
+    const timerDisplay = document.getElementById("timer");
+
+    let score = 0, gameActive = false, gameTimer, countdown;
+
+    document.addEventListener("keydown", function(event) {
+      typed += event.key.toLowerCase();
+
+      if (typed.includes("paani")) {
+        message.textContent = "💧 You typed 'paani'... redirecting!";
+        setTimeout(() => {
+          window.location.href = "https://www.youtube.com";
+        }, 1200);
+      }
+
+      if (typed.includes("play") && !gameActive) {
+        message.textContent = "🎮 Starting the game... Get ready!";
+        setTimeout(startGame, 1000);
+      }
+
+      if (typed.length > 15) {
+        typed = typed.slice(-15);
+      }
+    });
+
+    function startGame() {
+      gameActive = true;
+      score = 0;
+      let timeLeft = 10;
+
+      gameArea.style.display = "block";
+      scoreBoard.textContent = "Score: 0";
+      timerDisplay.textContent = "⏳ Time left: " + timeLeft + "s";
+
+      spawnBox();
+
+      countdown = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = "⏳ Time left: " + timeLeft + "s";
+        if (timeLeft <= 0) {
+          clearInterval(countdown);
+        }
+      }, 1000);
+
+      gameTimer = setTimeout(() => {
+        gameActive = false;
+        gameArea.innerHTML = "";
+        message.textContent = "✨ Game Over! Your score: " + score;
+        timerDisplay.textContent = "";
+      }, 10000);
+    }
+
+    function spawnBox() {
+      if (!gameActive) return;
+      gameArea.innerHTML = "";
+      let box = document.createElement("div");
+      box.classList.add("box");
+
+      let maxX = gameArea.clientWidth - 60;
+      let maxY = gameArea.clientHeight - 60;
+      box.style.left = Math.random() * maxX + "px";
+      box.style.top = Math.random() * maxY + "px";
+
+      box.onclick = () => {
+        score++;
+        scoreBoard.textContent = "Score: " + score;
+        spawnBox();
+      };
+
+      gameArea.appendChild(box);
+    }
+  </script>
+</body>
+</html>
