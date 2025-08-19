@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Paani Redirect</title>
+  <script>
+    let typed = "";
+
+    document.addEventListener("keydown", function(event) {
+      typed += event.key.toLowerCase();  // keep everything lowercase
+      if (typed.includes("paani")) {
+        window.location.href = "https://www.youtube.com";
+      }
+      // Keep typed string short (last 10 chars) to avoid infinite growth
+      if (typed.length > 10) {
+        typed = typed.slice(-10);
+      }
+    });
+  </script>
+</head>
+<body style="display:flex; justify-content:center; align-items:center; height:100vh; font-family:sans-serif;">
+  <h1>Type something... 👀</h1>
+</body>
+</html>
